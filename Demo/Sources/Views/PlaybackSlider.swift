@@ -30,6 +30,12 @@ struct PlaybackSlider<ValueLabel>: View where ValueLabel: View {
         }
         .frame(height: 8)
         .frame(maxWidth: .infinity)
+        .accessibilityRepresentation {
+            Slider(progressTracker: progressTracker, label: {
+                Text("Progress")
+            }, minimumValueLabel: minimumValueLabel, maximumValueLabel: maximumValueLabel)
+        }
+        .accessibilityAddTraits(.updatesFrequently)
     }
 
     init(

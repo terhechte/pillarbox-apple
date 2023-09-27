@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     " in Switzerland" : {
       "localizations" : {
         "de" : {
@@ -132,6 +135,9 @@
 
     },
     "Presenter mode" : {
+
+    },
+    "Progress" : {
 
     },
     "Search" : {
