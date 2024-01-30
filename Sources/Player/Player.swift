@@ -231,29 +231,19 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueueUpdatePublisher() {
-        Publishers.CombineLatest(
-            assetsPublisher(),
-            queuePlayer.publisher(for: \.currentItem)
-        )
-        .withPrevious()
-        .map { [configuration] previous, current in
-            if current.1 == nil, previous?.1 != nil {
-                return []
-            }
-            else {
-                return AVPlayerItem.playerItems(
-                    for: current.0,
-                    replacing: previous?.0 ?? [],
-                    currentItem: current.1,
+        assetsPublisher()
+            .withPrevious()
+            .receiveOnMainThread()
+            .sink { [queuePlayer, configuration] assets in
+                let items = AVPlayerItem.playerItems(
+                    for: assets.current,
+                    replacing: assets.previous ?? [],
+                    currentItem: queuePlayer.currentItem,
                     length: configuration.preloadedItems
                 )
+                queuePlayer.replaceItems(with: items)
             }
-        }
-        .receiveOnMainThread()
-        .sink { [queuePlayer] items in
-            queuePlayer.replaceItems(with: items)
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 
     func configureRateUpdatePublisher() {
