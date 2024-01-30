@@ -34,28 +34,31 @@ extension AVPlayerItem {
     ///   - currentAssets: The current list of assets.
     ///   - previousAssets: The previous list of assets.
     ///   - currentItem: The item currently being played by the player.
+    ///   - length: The maximum number of items to return.
     /// - Returns: The list of player items to load into the player.
     static func playerItems(
         for currentAssets: [any Assetable],
         replacing previousAssets: [any Assetable],
-        currentItem: AVPlayerItem?
+        currentItem: AVPlayerItem?,
+        length: Int
     ) -> [AVPlayerItem] {
+        assert(length > 1)
         guard let currentItem else { return playerItems(from: currentAssets) }
         if let currentIndex = matchingIndex(for: currentItem, in: currentAssets) {
             let currentAsset = currentAssets[currentIndex]
             if findAsset(currentAsset, in: previousAssets) {
                 currentAsset.update(item: currentItem)
-                return [currentItem] + playerItems(from: Array(currentAssets.suffix(from: currentIndex + 1)))
+                return [currentItem] + playerItems(from: Array(currentAssets.suffix(from: currentIndex + 1).prefix(length - 1)))
             }
             else {
-                return playerItems(from: Array(currentAssets.suffix(from: currentIndex)))
+                return playerItems(from: Array(currentAssets.suffix(from: currentIndex).prefix(length)))
             }
         }
         else if let commonIndex = firstCommonIndex(in: currentAssets, matching: previousAssets, after: currentItem) {
-            return playerItems(from: Array(currentAssets.suffix(from: commonIndex)))
+            return playerItems(from: Array(currentAssets.suffix(from: commonIndex).prefix(length)))
         }
         else {
-            return playerItems(from: currentAssets)
+            return playerItems(from: Array(currentAssets.prefix(length)))
         }
     }
 
