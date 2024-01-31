@@ -4,11 +4,11 @@
 //  License information is available from the LICENSE file.
 //
 
-public extension Array where Element: Hashable {
+public extension Array {
     /// Removes duplicates from the receiver, preserving the initial item order.
     ///
     /// - Returns: The array without duplicate items.
-    func removeDuplicates() -> [Element] {
+    func removeDuplicates() -> [Element] where Element: Hashable {
         var itemDictionnary = [Element: Bool]()
         return filter { itemDictionnary.updateValue(true, forKey: $0) == nil }
     }
