@@ -233,7 +233,7 @@ private extension Player {
     func configureQueueUpdatePublisher() {
         assetsPublisher()
             .withPrevious()
-            .receiveOnMainThread()
+            .receive(on: DispatchQueue.main)
             .sink { [queuePlayer, configuration] assets in
                 let id = UUID()
                 print("--> ---------- \(id)")
