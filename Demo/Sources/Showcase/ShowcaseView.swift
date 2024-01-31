@@ -98,8 +98,12 @@ struct ShowcaseView: View {
                 destination: .playlist(templates: URNTemplates.audios)
             )
             cell(
-                title: "Videos (one failed item)",
-                destination: .playlist(templates: URNTemplates.videosWithOneError)
+                title: "Videos (one failing item, unknown)",
+                destination: .playlist(templates: URNTemplates.videosWithUnknownError)
+            )
+            cell(
+                title: "Videos (one failing item, unauthorized)",
+                destination: .playlist(templates: URNTemplates.videosWithUnauthorizedError)
             )
             cell(
                 title: "Videos (all failing)",
