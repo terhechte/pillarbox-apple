@@ -21,6 +21,14 @@ protocol Assetable {
 }
 
 extension Assetable {
+    func load() {
+        //DispatchQueue.main.async {
+            PlayerItem.trigger.activate(for: id)
+        //}
+    }
+}
+
+extension Assetable {
     func matches(_ playerItem: AVPlayerItem?) -> Bool {
         id == playerItem?.id
     }
@@ -63,7 +71,10 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from assets: [any Assetable]) -> [AVPlayerItem] {
-        assets.map { $0.playerItem() }
+        assets.map { asset in
+            asset.load()
+            return asset.playerItem()
+        }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in assets: [any Assetable]) -> Int? {
