@@ -22,9 +22,7 @@ protocol Assetable {
 
 extension Assetable {
     func load() {
-        //DispatchQueue.main.async {
-            PlayerItem.trigger.activate(for: id)
-        //}
+        PlayerItem.trigger.activate(for: id)
     }
 }
 
