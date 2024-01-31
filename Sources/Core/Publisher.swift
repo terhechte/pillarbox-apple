@@ -52,6 +52,19 @@ public extension Publisher {
 }
 
 public extension Publisher {
+    /**
+     *  Make the upstream publisher wait until a second signal publisher emits some value.
+     */
+    func wait<S>(untilOutputFrom signal: S) -> AnyPublisher<Output, Failure> where S: Publisher, S.Failure == Never {
+        return prepend(
+            Empty(completeImmediately: false)
+                .prefix(untilOutputFrom: signal)
+        )
+        .eraseToAnyPublisher()
+    }
+}
+
+public extension Publisher {
     /// Captures an object weakly and provides one of its properties as additional output.
     ///
     /// - Parameters:
