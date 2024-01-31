@@ -235,12 +235,17 @@ private extension Player {
             .withPrevious()
             .receiveOnMainThread()
             .sink { [queuePlayer, configuration] assets in
+                let id = UUID()
+                print("--> ---------- \(id)")
+                print("--> \(id) prev: \(assets.previous)")
+                print("--> \(id) curr: \(assets.current)")
                 let items = AVPlayerItem.playerItems(
                     for: assets.current,
                     replacing: assets.previous ?? [],
                     currentItem: queuePlayer.currentItem,
                     length: configuration.preloadedItems
                 )
+                print("--> \(id) it: \(items)")
                 queuePlayer.replaceItems(with: items)
             }
             .store(in: &cancellables)
