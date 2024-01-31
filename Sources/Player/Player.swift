@@ -264,9 +264,7 @@ private extension Player {
                 guard let self, let index = storedItems.firstIndex(where: { $0.matches(item) }) else { return }
                 let nextIndex = index + configuration.preloadedItems
                 guard nextIndex < storedItems.count else { return }
-                let nextAsset = storedItems[nextIndex].asset
-                nextAsset.load()
-                queuePlayer.insert(nextAsset.playerItem(), after: nil)
+                queuePlayer.insert(storedItems[nextIndex].asset.playerItem(), after: nil)
             }
             .store(in: &cancellables)
     }
