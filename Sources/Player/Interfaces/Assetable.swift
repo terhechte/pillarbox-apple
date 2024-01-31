@@ -22,6 +22,7 @@ protocol Assetable {
 
 extension Assetable {
     func load() {
+        guard !resource.isLoaded else { return }
         PlayerItem.trigger.activate(for: id)
     }
 }
