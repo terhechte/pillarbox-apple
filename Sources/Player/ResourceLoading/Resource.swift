@@ -39,15 +39,6 @@ enum Resource {
 #endif
         }
     }
-
-    var isLoaded: Bool {
-        switch self {
-        case let .custom(url, delegate: _):
-            return !url.absoluteString.contains("loading.m3u8") && !url.absoluteString.contains("failing.m3u8")
-        default:
-            return true
-        }
-    }
 }
 
 extension Resource: Equatable {

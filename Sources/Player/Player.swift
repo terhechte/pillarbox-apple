@@ -254,14 +254,8 @@ private extension Player {
             .compactMap { $0 }
             .map { item in
                 Publishers.Merge(
-                    NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item).map { _ in
-                        print("--> ended")
-                        return item
-                    },
-                    item.errorPublisher().compactMap { $0 }.map { _ in
-                        print("--> failed")
-                        return item
-                    }
+                    NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item).map { _ in item },
+                    item.errorPublisher().compactMap { $0 }.map { _ in item }
                 )
             }
             .switchToLatest()
