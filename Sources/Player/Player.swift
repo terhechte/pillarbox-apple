@@ -233,7 +233,7 @@ private extension Player {
     func configureQueueUpdatePublisher() {
         assetsPublisher()
             .withPrevious()
-            .receive(on: DispatchQueue.main)
+            .receiveOnMainThread()
             .sink { [queuePlayer, configuration] assets in
                 let items = AVPlayerItem.playerItems(
                     for: assets.current,
