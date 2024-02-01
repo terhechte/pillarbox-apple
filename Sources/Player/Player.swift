@@ -248,10 +248,7 @@ private extension Player {
         queuePlayer.publisher(for: \.currentItem)
             .compactMap { $0 }
             .map { item in
-                Publishers.Merge(
-                    NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item).map { _ in item },
-                    item.errorPublisher().compactMap { $0 }.map { _ in item }
-                )
+                NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item).map { _ in item }
             }
             .switchToLatest()
             .receiveOnMainThread()
