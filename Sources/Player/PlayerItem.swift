@@ -36,6 +36,7 @@ public final class PlayerItem: Equatable {
         .map { [id] asset in
             asset.withId(id).withTrackerAdapters(trackerAdapters)
         }
+        .receiveOnMainThread()
         .assign(to: &$asset)
     }
 
