@@ -148,19 +148,11 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         return nowPlayingInfo
     }
 
-    func playerItem(fresh: Bool) -> AVPlayerItem {
-        if fresh, case let .custom(url, _) = resource, url.absoluteString.contains("failing.m3u8") {
-            let item = resource.playerItem().withId(id)
-            configuration(item)
-            update(item: item)
-            return item
-        }
-        else {
-            let item = resource.playerItem().withId(id)
-            configuration(item)
-            update(item: item)
-            return item
-        }
+    func playerItem() -> AVPlayerItem {
+        let item = resource.playerItem().withId(id)
+        configuration(item)
+        update(item: item)
+        return item
     }
 
     func update(item: AVPlayerItem) {

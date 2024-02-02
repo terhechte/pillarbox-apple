@@ -11,7 +11,7 @@ final class LoadingResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelega
         _ resourceLoader: AVAssetResourceLoader,
         shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest
     ) -> Bool {
-        return true
+        true
     }
 
     func resourceLoader(
