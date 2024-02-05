@@ -63,7 +63,10 @@ extension AVPlayerItem {
     }
 
     static func playerItems(from assets: [any Assetable]) -> [AVPlayerItem] {
-        assets.map { $0.playerItem() }
+        assets.map { asset in
+            PlayerItem.load(for: asset.id)
+            return asset.playerItem()
+        }
     }
 
     private static func matchingIndex(for item: AVPlayerItem, in assets: [any Assetable]) -> Int? {
