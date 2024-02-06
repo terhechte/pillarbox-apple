@@ -19,7 +19,7 @@ enum URLTemplates {
             type: .url(
                 "https://rts-vod-amd.akamaized.net/ww/13444333/feb1d08d-e62c-31ff-bac9-64c0a7081612/master.m3u8"
             )
-        ),
+        ),/*
         Template(
             title: "Le R. - Endométriose",
             description: "Playlist item 3",
@@ -61,7 +61,7 @@ enum URLTemplates {
             type: .url(
                 "https://rts-vod-amd.akamaized.net/ww/13444428/857d97ef-0b8e-306e-bf79-3b13e8c901e4/master.m3u8"
             )
-        )
+        )*/
     ]
 }
 

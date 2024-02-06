@@ -231,31 +231,46 @@ public final class Player: ObservableObject, Equatable {
 
 private extension Player {
     func configureQueueUpdatePublisher() {
-        Publishers.CombineLatest(
-            assetsPublisher()
-                .withPrevious(),
-            queuePlayer.publisher(for: \.currentItem)
-                .withPrevious(nil)
-        )
-        .filter { $1.current?.isReplaced != true }
-        .map { [configuration] assets, currentItem in
-            if currentItem.current == nil && currentItem.previous != nil {
-                return []
-            }
-            else {
-                return AVPlayerItem.playerItems(
+        assetsPublisher()
+            .withPrevious()
+            .receiveOnMainThread()
+            .map { [configuration, queuePlayer] assets in
+                AVPlayerItem.playerItems(
                     for: assets.current,
                     replacing: assets.previous ?? [],
-                    currentItem: currentItem.current,
+                    currentItem: queuePlayer.currentItem,
                     length: configuration.preloadedItems
                 )
             }
-        }
-        .receiveOnMainThread()
-        .sink { [queuePlayer] items in
-            queuePlayer.replaceItems(with: items)
-        }
-        .store(in: &cancellables)
+            .receiveOnMainThread()
+            .sink { [queuePlayer] items in
+                queuePlayer.replaceItems(with: items)
+            }
+            .store(in: &cancellables)
+
+        queuePlayer.publisher(for: \.currentItem)
+            .withPrevious(nil)
+            .filter { $0.current?.isReplaced  != true }
+            .compactMap { [weak self, configuration] currentItem -> [AVPlayerItem]? in
+                guard let self else { return nil }
+                if currentItem.current == nil && currentItem.previous != nil {
+                    return []
+                }
+                else {
+                    let assets = storedItems.map(\.asset)
+                    return AVPlayerItem.playerItems(
+                        for: assets,
+                        replacing: assets,
+                        currentItem: currentItem.current,
+                        length: configuration.preloadedItems
+                    )
+                }
+            }
+            .receiveOnMainThread()
+            .sink { [queuePlayer] items in
+                queuePlayer.replaceItems(with: items)
+            }
+            .store(in: &cancellables)
     }
 
     func configureRateUpdatePublisher() {
