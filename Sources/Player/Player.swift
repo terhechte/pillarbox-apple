@@ -247,7 +247,7 @@ private extension Player {
                 length: configuration.preloadedItems
             )
         }
-        .receive(on: DispatchQueue.main)
+        .receiveOnMainThread()
         .sink { [queuePlayer] items in
             queuePlayer.replaceItems(with: items)
         }
