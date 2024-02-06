@@ -235,17 +235,21 @@ private extension Player {
             assetsPublisher()
                 .withPrevious(),
             queuePlayer.publisher(for: \.currentItem)
+                .withPrevious(nil)
         )
-        .filter { [weak self] _, currentItem in
-            currentItem?.isReplaced != true && self?.error == nil
-        }
+        .filter { $1.current?.isReplaced != true }
         .map { [configuration] assets, currentItem in
-            AVPlayerItem.playerItems(
-                for: assets.current,
-                replacing: assets.previous ?? [],
-                currentItem: currentItem,
-                length: configuration.preloadedItems
-            )
+            if currentItem.current == nil && currentItem.previous != nil {
+                return []
+            }
+            else {
+                return AVPlayerItem.playerItems(
+                    for: assets.current,
+                    replacing: assets.previous ?? [],
+                    currentItem: currentItem.current,
+                    length: configuration.preloadedItems
+                )
+            }
         }
         .receiveOnMainThread()
         .sink { [queuePlayer] items in
