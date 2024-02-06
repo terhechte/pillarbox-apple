@@ -233,7 +233,7 @@ private extension Player {
     func configureQueueUpdatePublisher() {
         assetsPublisher()
             .withPrevious()
-            .receiveOnMainThread()
+            .receive(on: DispatchQueue.main)
             .sink { [queuePlayer, configuration] assets in
                 let items = AVPlayerItem.playerItems(
                     for: assets.current,
@@ -251,7 +251,7 @@ private extension Player {
                 NotificationCenter.default.weakPublisher(for: .AVPlayerItemDidPlayToEndTime, object: item).map { _ in item }
             }
             .switchToLatest()
-            .receiveOnMainThread()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] item in
                 guard let self, let index = storedItems.firstIndex(where: { $0.matches(item) }) else { return }
                 let nextIndex = index + configuration.preloadedItems
