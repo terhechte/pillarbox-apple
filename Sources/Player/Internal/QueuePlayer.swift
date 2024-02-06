@@ -159,7 +159,9 @@ extension AVQueuePlayer {
         if let firstItem = items.first {
             if firstItem !== self.items().first {
                 remove(firstItem)
+                firstItem.isReplaced = true
                 replaceCurrentItem(with: firstItem)
+                firstItem.isReplaced = false
             }
             removeAll(from: 1)
             if items.count > 1 {

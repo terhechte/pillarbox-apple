@@ -6,6 +6,8 @@
 
 import AVFoundation
 
+private var kIsReplacedKey: Void?
+
 public extension AVPlayerItem {
     /// Seeks to a given position.
     ///
@@ -30,5 +32,17 @@ extension AVPlayerItem {
 
     static func playerItems(from items: [PlayerItem], length: Int) -> [AVPlayerItem] {
         playerItems(from: items.prefix(length).map(\.asset))
+    }
+}
+
+extension AVPlayerItem {
+    /// An identifier for player items delivered by the same data source.
+    var isReplaced: Bool {
+        get {
+            objc_getAssociatedObject(self, &kIsReplacedKey) as? Bool ?? false
+        }
+        set {
+            objc_setAssociatedObject(self, &kIsReplacedKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }
