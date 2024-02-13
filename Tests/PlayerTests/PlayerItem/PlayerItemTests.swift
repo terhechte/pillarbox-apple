@@ -6,6 +6,7 @@
 
 @testable import PillarboxPlayer
 
+import MediaPlayer
 import Nimble
 import PillarboxStreams
 
@@ -143,5 +144,14 @@ final class PlayerItemTests: TestCase {
         expect(item.asset.resource).toEventually(equal(.encrypted(url: Stream.onDemand.url, delegate: delegate)))
         expect(item.asset.nowPlayingInfo()).to(beNil())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(0))
+    }
+
+    func testUrlControlCenterErrorMetadata() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expectAtLeastEqualPublished(
+            values: ["404"],
+            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as? String },
+            timeout: .seconds(5)
+        )
     }
 }
