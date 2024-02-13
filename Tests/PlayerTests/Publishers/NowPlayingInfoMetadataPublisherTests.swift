@@ -110,4 +110,14 @@ final class NowPlayingInfoMetadataPublisherTests: TestCase {
             player.play()
         }
     }
+
+    func testErrorMetadata() {
+        let player = Player(item: .simple(url: Stream.unavailable.url))
+        expectAtLeastSimilarPublished(
+            values: [[MPMediaItemPropertyTitle: "\((PlayerError.resourceNotFound.underlyingErrors.first! as NSError).userInfo["NSDescription"] as! String)"]],
+            from: player.nowPlayingInfoMetadataPublisher()
+        ) {
+            player.play()
+        }
+    }
 }

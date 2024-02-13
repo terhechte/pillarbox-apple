@@ -145,13 +145,4 @@ final class PlayerItemTests: TestCase {
         expect(item.asset.nowPlayingInfo()).to(beNil())
         expect(item.asset.playerItem().preferredForwardBufferDuration).to(equal(0))
     }
-
-    func testUrlControlCenterErrorMetadata() {
-        let player = Player(item: .simple(url: Stream.unavailable.url))
-        expectAtLeastEqualPublished(
-            values: [(PlayerError.resourceNotFound.underlyingErrors.first! as NSError).userInfo["NSDescription"] as! String],
-            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as! String },
-            timeout: .seconds(5)
-        )
-    }
 }
