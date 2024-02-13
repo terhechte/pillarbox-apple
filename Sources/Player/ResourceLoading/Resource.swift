@@ -73,6 +73,17 @@ extension Resource {
     }
 }
 
+extension Resource {
+    var error: NSError? {
+        switch self {
+        case let .custom(_, delegate):
+            return (delegate as? FailedResourceLoaderDelegate)?.error as? NSError
+        default:
+            return nil
+        }
+    }
+}
+
 extension Resource: Equatable {
     static func == (lhs: Resource, rhs: Resource) -> Bool {
         switch (lhs, rhs) {
