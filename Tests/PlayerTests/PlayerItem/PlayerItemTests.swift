@@ -149,8 +149,8 @@ final class PlayerItemTests: TestCase {
     func testUrlControlCenterErrorMetadata() {
         let player = Player(item: .simple(url: Stream.unavailable.url))
         expectAtLeastEqualPublished(
-            values: ["404"],
-            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as? String },
+            values: [(PlayerError.resourceNotFound.underlyingErrors.first! as NSError).userInfo["NSDescription"] as! String],
+            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as! String },
             timeout: .seconds(5)
         )
     }
