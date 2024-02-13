@@ -163,7 +163,7 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
         else {
             if resource.isFailing {
                 var nowPlayingInfo = NowPlayingInfo()
-                nowPlayingInfo[MPMediaItemPropertyTitle] = "Error"
+                nowPlayingInfo[MPMediaItemPropertyTitle] = resource.error?.localizedDescription
                 return nowPlayingInfo
             }
             else {
