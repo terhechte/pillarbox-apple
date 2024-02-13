@@ -58,14 +58,15 @@ final class PlayerItemTests: XCTestCase {
         )
     }
 
-    func testUrnControlCenterErrorMetadata() {
+    func testUrnNowPlayingInfoErrorMetadata() {
         let item = PlayerItem.urn("urn:rts:video:13382911")
         let player = Player(item: item)
         expectAtLeastEqualPublished(
             values: [BlockingReason.endDate.description],
-            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as? String },
-            timeout: .seconds(1)
-        )
+            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as? String }
+        ) {
+            player.play()
+        }
     }
 
     func testLoadNotLooping() {
