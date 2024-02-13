@@ -151,24 +151,13 @@ public struct Asset<M>: Assetable where M: AssetMetadata {
 
     func nowPlayingInfo() -> NowPlayingInfo? {
         if let metadata = metadata?.nowPlayingMetadata() {
-            var nowPlayingInfo = NowPlayingInfo()
-            nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
-            nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
-            nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
-            if let image = metadata.image {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
-            return nowPlayingInfo
+            return nowPlayingInfo(from: metadata)
+        }
+        else if let error = resource.error {
+            return nowPlayingInfo(from: error)
         }
         else {
-            if resource.isFailing {
-                var nowPlayingInfo = NowPlayingInfo()
-                nowPlayingInfo[MPMediaItemPropertyTitle] = resource.error?.localizedDescription
-                return nowPlayingInfo
-            }
-            else {
-                return nil
-            }
+            return nil
         }
     }
 
@@ -287,6 +276,25 @@ private extension Asset {
         item.value = value as? NSCopying & NSObjectProtocol
         item.extendedLanguageTag = "und"
         return item.copy() as? AVMetadataItem
+    }
+}
+
+private extension Asset {
+    func nowPlayingInfo(from metadata: NowPlayingMetadata) -> NowPlayingInfo {
+        var nowPlayingInfo = NowPlayingInfo()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = metadata.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = metadata.subtitle
+        nowPlayingInfo[MPMediaItemPropertyComments] = metadata.description
+        if let image = metadata.image {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+        }
+        return nowPlayingInfo
+    }
+
+    func nowPlayingInfo(from error: NSError) -> NowPlayingInfo {
+        var nowPlayingInfo = NowPlayingInfo()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = error.localizedDescription
+        return nowPlayingInfo
     }
 }
 
