@@ -8,6 +8,7 @@
 @testable import PillarboxPlayer
 
 import Combine
+import MediaPlayer
 import Nimble
 import PillarboxCircumspect
 import XCTest
@@ -54,6 +55,16 @@ final class PlayerItemTests: XCTestCase {
             values: [.idle],
             from: playbackStatePublisher(for: player),
             during: .seconds(1)
+        )
+    }
+
+    func testUrnControlCenterErrorMetadata() {
+        let item = PlayerItem.urn("urn:rts:video:13382911")
+        let player = Player(item: item)
+        expectAtLeastEqualPublished(
+            values: [BlockingReason.endDate.description],
+            from: player.nowPlayingInfoMetadataPublisher().map { $0[MPMediaItemPropertyTitle] as? String },
+            timeout: .seconds(1)
         )
     }
 
