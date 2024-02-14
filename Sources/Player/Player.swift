@@ -337,6 +337,10 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
 
+            nowPlayingSession.remoteCommandCenter.togglePlayPauseCommand.isEnabled = update.currentItem?.error == nil
+            nowPlayingSession.remoteCommandCenter.playCommand.isEnabled = update.currentItem?.error == nil
+            nowPlayingSession.remoteCommandCenter.pauseCommand.isEnabled = update.currentItem?.error == nil
+
             let index = update.currentIndex()
             nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
             nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
