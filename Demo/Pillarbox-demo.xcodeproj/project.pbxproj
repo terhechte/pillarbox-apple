@@ -28,6 +28,8 @@
 		6F0E5CD32B3394EA0031E313 /* PiPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD22B3394EA0031E313 /* PiPButton.swift */; };
 		6F0E5CD52B33A41F0031E313 /* MonoscopicVideoView~ios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */; };
 		6F26F35E2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */; };
+		6F3CA5B22B7E1C93002AB2C3 /* AVFoundationCollector in Frameworks */ = {isa = PBXBuildFile; productRef = 6F3CA5B12B7E1C93002AB2C3 /* AVFoundationCollector */; };
+		6F3CA5B42B7E1CA1002AB2C3 /* BitmovinTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3CA5B32B7E1CA1002AB2C3 /* BitmovinTracker.swift */; };
 		6F59E87929CF31E10093E6FB /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84029CF31E10093E6FB /* SearchView.swift */; };
 		6F59E87A29CF31E10093E6FB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84129CF31E10093E6FB /* SearchViewModel.swift */; };
 		6F59E87B29CF31E10093E6FB /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F59E84329CF31E10093E6FB /* DemoApp.swift */; };
@@ -115,6 +117,7 @@
 		6F0E5CD22B3394EA0031E313 /* PiPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPButton.swift; sourceTree = "<group>"; };
 		6F0E5CD42B33A41F0031E313 /* MonoscopicVideoView~ios.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MonoscopicVideoView~ios.swift"; sourceTree = "<group>"; };
 		6F26F35D2B33B73900392ED4 /* SupportingBasicPictureInPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportingBasicPictureInPicture.swift; sourceTree = "<group>"; };
+		6F3CA5B32B7E1CA1002AB2C3 /* BitmovinTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinTracker.swift; sourceTree = "<group>"; };
 		6F45DB9A2893B773008ACCE6 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		6F45DB9B2893B773008ACCE6 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		6F45DB9D2893B773008ACCE6 /* Demo.nightly.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Demo.nightly.xcconfig; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F3CA5B22B7E1C93002AB2C3 /* AVFoundationCollector in Frameworks */,
 				6FCA4747292CBEC7008C2812 /* ShowTime in Frameworks */,
 				0EF42CB629AE513400553165 /* SRGDataProviderCombine in Frameworks */,
 				6F9B5BC928CF8C530074B9E0 /* OrderedCollections in Frameworks */,
@@ -408,6 +412,7 @@
 				6F59E86C29CF31E10093E6FB /* SimplePlayerView.swift */,
 				6F59E86D29CF31E10093E6FB /* SystemPlayerView.swift */,
 				6F59E86F29CF31E10093E6FB /* VanillaPlayerView.swift */,
+				6F3CA5B32B7E1CA1002AB2C3 /* BitmovinTracker.swift */,
 			);
 			path = Players;
 			sourceTree = "<group>";
@@ -538,6 +543,7 @@
 				6FCA4746292CBEC7008C2812 /* ShowTime */,
 				0EF42CB529AE513400553165 /* SRGDataProviderCombine */,
 				6F09A2912B48744000700365 /* PillarboxCoreBusiness */,
+				6F3CA5B12B7E1C93002AB2C3 /* AVFoundationCollector */,
 			);
 			productName = PillarboxDemo;
 			productReference = 6F05B8D52887E934005D75E3 /* Pillarbox-demo.app */;
@@ -575,6 +581,7 @@
 				6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				6FCA4745292CBEC7008C2812 /* XCRemoteSwiftPackageReference "ShowTime" */,
 				0EF42CB429AE513400553165 /* XCRemoteSwiftPackageReference "srgdataprovider-apple" */,
+				6F3CA5B02B7E1C93002AB2C3 /* XCRemoteSwiftPackageReference "bitmovin-analytics-collector-ios" */,
 			);
 			productRefGroup = 6F05B8D62887E934005D75E3 /* Products */;
 			projectDirPath = "";
@@ -606,6 +613,7 @@
 			files = (
 				6FBF198F2B1A2E1C00B16BD5 /* OptimizingCustomLayouts2~ios.swift in Sources */,
 				6FBCC1F92B2A090E009EA3E3 /* MotionManager~ios.swift in Sources */,
+				6F3CA5B42B7E1CA1002AB2C3 /* BitmovinTracker.swift in Sources */,
 				6F59E88729CF31E20093E6FB /* SettingsView.swift in Sources */,
 				0EE2A3AE2B29D6D000BAAD65 /* CustomList.swift in Sources */,
 				6F59E87C29CF31E10093E6FB /* AppDelegate.swift in Sources */,
@@ -980,6 +988,14 @@
 				minimumVersion = 19.0.0;
 			};
 		};
+		6F3CA5B02B7E1C93002AB2C3 /* XCRemoteSwiftPackageReference "bitmovin-analytics-collector-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bitmovin/bitmovin-analytics-collector-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.5.0;
+			};
+		};
 		6F9B5BC728CF8C530074B9E0 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -1007,6 +1023,11 @@
 		6F09A2912B48744000700365 /* PillarboxCoreBusiness */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PillarboxCoreBusiness;
+		};
+		6F3CA5B12B7E1C93002AB2C3 /* AVFoundationCollector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6F3CA5B02B7E1C93002AB2C3 /* XCRemoteSwiftPackageReference "bitmovin-analytics-collector-ios" */;
+			productName = AVFoundationCollector;
 		};
 		6F9B5BC828CF8C530074B9E0 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;

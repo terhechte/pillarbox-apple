@@ -76,7 +76,8 @@ struct Media: Hashable {
             return .urn(urn, server: server, trackerAdapters: [
                 DemoTracker.adapter { metadata in
                     DemoTracker.Metadata(title: metadata.title)
-                }
+                },
+                BitmovinTracker.adapter()
             ]) { item in
                 item.seek(at(startTime))
             }
