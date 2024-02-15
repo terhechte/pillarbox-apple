@@ -31,21 +31,16 @@ extension Player {
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         currentPublisher()
-            .map { [queuePlayer] current in
+            .map { current in
                 guard let current else {
                     return Just(NowPlayingInfo()).eraseToAnyPublisher()
                 }
-                return Publishers.CombineLatest(current.item.$asset, queuePlayer.errorPublisher())
-                    .filter { asset, _ in
+                return current.item.$asset
+                    .filter { asset in
                         !asset.resource.isLoading
                     }
-                    .compactMap { asset, error in
-                        if let error {
-                            Asset<Never>.failed(error: error).nowPlayingInfo()
-                        }
-                        else {
-                            asset.nowPlayingInfo()
-                        }
+                    .compactMap { asset in
+                        asset.nowPlayingInfo()
                     }
                     .eraseToAnyPublisher()
             }
