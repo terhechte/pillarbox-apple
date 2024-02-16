@@ -152,6 +152,27 @@ final class ComScoreTrackerTests: ComScoreTestCase {
         }
     }
 
+    func testMovingItem() {
+        let item1 = PlayerItem.simple(
+            url: Stream.onDemand.url,
+            metadata: AssetMetadataMock(),
+            trackerAdapters: [
+                ComScoreTracker.adapter { _ in .test }
+            ]
+        )
+        let item2 = PlayerItem.simple(url: Stream.onDemand.url)
+
+        let player = Player(items: [item1, item2])
+
+        expectHits(.play()) {
+            player.play()
+        }
+
+        expectNoHits(during: .seconds(3)) {
+            player.move(item1, after: item2)
+        }
+    }
+
     func testDisableTrackingDuringPlayback() {
         let player = Player(item: .simple(
             url: Stream.onDemand.url,
