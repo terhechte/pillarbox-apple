@@ -30,12 +30,14 @@ extension Player {
     }
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        currentPublisher()
-            .map { current in
-                guard let current else {
+        itemUpdatePublisher
+            .map { $0.currentPlayerItem() }
+            .removeDuplicates()
+            .map { item in
+                guard let item else {
                     return Just(NowPlayingInfo()).eraseToAnyPublisher()
                 }
-                return current.item.$asset
+                return item.$asset
                     .filter { asset in
                         !asset.resource.isLoading
                     }
