@@ -31,20 +31,21 @@ extension Player {
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         itemUpdatePublisher
-            .map { $0.currentPlayerItem() }
-            .removeDuplicates()
-            .map { item in
-                guard let item else {
+            .receive(on: DispatchQueue.main)
+            .map { update in
+                guard let item = update.currentPlayerItem() else {
                     return Just(NowPlayingInfo()).eraseToAnyPublisher()
                 }
-                return item.$asset
-                    .filter { asset in
-                        !asset.resource.isLoading
-                    }
-                    .compactMap { asset in
-                        asset.nowPlayingInfo()
-                    }
-                    .eraseToAnyPublisher()
+                return Publishers.CombineLatest(
+                    item.$asset
+                        .filter { !$0.resource.isLoading }
+                        .receive(on: DispatchQueue.main),
+                    Just(update.currentItem?.error)
+                )
+                .compactMap { asset, error in
+                    asset.nowPlayingInfo(with: error)
+                }
+                .eraseToAnyPublisher()
             }
             .switchToLatest()
             .removeDuplicates { lhs, rhs in
