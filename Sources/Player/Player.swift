@@ -295,9 +295,7 @@ private extension Player {
 
     func configureCurrentTrackerPublisher() {
         itemUpdatePublisher
-            .map { update in
-                update.currentPlayerItem()
-            }
+            .map { $0.currentPlayerItem() }
             .removeDuplicates()
             .map { [weak self] item in
                 guard let self, let item else { return nil }
