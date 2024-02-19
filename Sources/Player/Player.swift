@@ -75,11 +75,18 @@ public final class Player: ObservableObject, Equatable {
             .eraseToAnyPublisher()
     }()
 
-    lazy var itemUpdatePublisher: AnyPublisher<ItemUpdate, Never> = {
-        Publishers.CombineLatest($storedItems, queuePlayer.smoothCurrentItemPublisher())
-            .map { ItemUpdate(items: $0, currentItem: $1) }
-            .share(replay: 1)
-            .eraseToAnyPublisher()
+    lazy var playerItemQueuePublisher: AnyPublisher<PlayerItemQueue, Never> = {
+        Publishers.Merge(
+            $storedItems
+                .map { PlayerItemQueueUpdate.items($0) },
+            queuePlayer.itemTransitionPublisher()
+                .map { PlayerItemQueueUpdate.itemTransition($0) }
+        )
+        .scan(PlayerItemQueue.initial) { queue, update in
+            queue.updated(with: update)
+        }
+        .share(replay: 1)
+        .eraseToAnyPublisher()
     }()
 
     /// A Boolean setting whether the audio output of the player must be muted.
@@ -278,7 +285,7 @@ private extension Player {
     }
 
     private func resetErrorPublisher() -> AnyPublisher<Error?, Never> {
-        itemUpdatePublisher
+        playerItemQueuePublisher
             .slice(at: \.items)
             .filter { $0.isEmpty }
             .map { _ in nil }
@@ -286,7 +293,7 @@ private extension Player {
     }
 
     func configureCurrentIndexPublisher() {
-        itemUpdatePublisher
+        playerItemQueuePublisher
             .slice(at: \.currentIndex)
             .receiveOnMainThread()
             .lane("player_current_index")
@@ -294,7 +301,7 @@ private extension Player {
     }
 
     func configureCurrentTrackerPublisher() {
-        itemUpdatePublisher
+        playerItemQueuePublisher
             .slice(at: \.currentPlayerItem)
             .map { [weak self] item in
                 guard let self, let item else { return nil }
@@ -329,7 +336,7 @@ private extension Player {
 
     func configureControlCenterRemoteCommandUpdatePublisher() {
         Publishers.CombineLatest(
-            itemUpdatePublisher,
+            playerItemQueuePublisher,
             propertiesPublisher
         )
         .sink { [weak self] update, properties in
