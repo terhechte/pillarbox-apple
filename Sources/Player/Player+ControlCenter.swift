@@ -32,7 +32,7 @@ extension Player {
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         queuePublisher()
             .map(\.currentAsset)
-            .map { update in
+            .map { update -> (any Assetable)? in
                 switch update {
                 case let .valid(asset):
                     return asset
@@ -40,8 +40,10 @@ extension Player {
                     return nil
                 }
             }
-            .map { asset in
-                asset?.nowPlayingInfo() ?? [:]
+            .compactMap { asset -> NowPlayingInfo? in
+                guard let asset else { return NowPlayingInfo() }
+                guard !asset.resource.isLoading else { return nil }
+                return asset.nowPlayingInfo() ?? [:]
             }
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type
