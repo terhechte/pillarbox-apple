@@ -30,7 +30,7 @@ extension Player {
             .eraseToAnyPublisher()
     }
 
-    private func queuePublisher() -> AnyPublisher<ItemQueue, Never> {
+    func queuePublisher() -> AnyPublisher<ItemQueue, Never> {
         Publishers.Merge(
             assetsPublisher()
                 .map { ItemQueueUpdate.assets($0) },

@@ -6,11 +6,23 @@
 
 import DequeModule
 
+enum ItemIndex: Equatable {
+    case valid(Int?)
+    case invalid
+}
+
+// TODO: Generics for all valid / invalid enums
+enum QueueItem: Equatable {
+    case valid(PlayerItem?)
+    case invalid
+}
+
 enum PlayerItemQueueUpdate {
     case items(Deque<PlayerItem>)
     case itemTransition(ItemTransition)
 }
 
+// TODO: Generics for ItemQueue / PlayerItemQueue, same idea 
 struct PlayerItemQueue {
     static var initial: Self {
         .init(items: [], itemTransition: .advance(to: nil))
@@ -33,38 +45,42 @@ struct PlayerItemQueue {
         }
     }
 
-    var currentIndex: Int? {
+    var currentIndex: ItemIndex {
         switch itemTransition {
         case let .advance(to: item):
             if let item {
-                return items.firstIndex { $0.matches(item) }
+                guard let index = items.firstIndex(where: { $0.matches(item) }) else { return .invalid }
+                return .valid(index)
             }
             else if !items.isEmpty {
-                return 0
+                return .valid(0)
             }
             else {
-                return nil
+                return .valid(nil)
             }
         case let .stop(on: item):
-            return items.firstIndex { $0.matches(item) }
+            guard let index = items.firstIndex(where: { $0.matches(item) }) else { return .invalid }
+            return .valid(index)
         case .finish:
-            return nil
+            return .valid(nil)
         }
     }
 
-    var currentPlayerItem: PlayerItem? {
+    var currentPlayerItem: QueueItem {
         switch itemTransition {
         case let .advance(to: item):
             if let item {
-                return items.first { $0.matches(item) }
+                guard let item = items.first(where: { $0.matches(item) }) else { return .invalid }
+                return .valid(item)
             }
             else {
-                return items.first
+                return .valid(items.first)
             }
         case let .stop(on: item):
-            return items.first { $0.matches(item) }
+            guard let item = items.first(where: { $0.matches(item) }) else { return .invalid }
+            return .valid(item)
         case .finish:
-            return nil
+            return .valid(nil)
         }
     }
 }

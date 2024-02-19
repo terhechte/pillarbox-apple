@@ -8,7 +8,8 @@ import Combine
 
 extension Player {
     func assetsPublisher() -> AnyPublisher<[any Assetable], Never> {
-        $storedItems
+        playerItemQueuePublisher
+            .slice(at: \.items)
             .map { items in
                 Publishers.AccumulateLatestMany(items.map { item in
                     item.$asset

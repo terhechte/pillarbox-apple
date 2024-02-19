@@ -30,18 +30,19 @@ extension Player {
     }
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
-        playerItemQueuePublisher
-            .slice(at: \.currentPlayerItem)
-            .map { item in
-                guard let item else {
-                    return Just(NowPlayingInfo()).eraseToAnyPublisher()
+        queuePublisher()
+            .map(\.currentAsset)
+            .map { update in
+                switch update {
+                case let .valid(asset):
+                    return asset
+                case .invalid:
+                    return nil
                 }
-                return item.$asset
-                    .filter { !$0.resource.isLoading }
-                    .compactMap { $0.nowPlayingInfo() }
-                    .eraseToAnyPublisher()
             }
-            .switchToLatest()
+            .map { asset in
+                asset?.nowPlayingInfo() ?? [:]
+            }
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type
                 NSDictionary(dictionary: lhs).isEqual(to: rhs)

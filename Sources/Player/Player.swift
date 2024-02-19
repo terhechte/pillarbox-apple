@@ -295,6 +295,15 @@ private extension Player {
     func configureCurrentIndexPublisher() {
         playerItemQueuePublisher
             .slice(at: \.currentIndex)
+            .filter { $0 != .invalid }
+            .map { index in
+                switch index {
+                case let .valid(index):
+                    return index
+                case .invalid:
+                    return nil
+                }
+            }
             .receiveOnMainThread()
             .lane("player_current_index")
             .assign(to: &$currentIndex)
@@ -303,6 +312,15 @@ private extension Player {
     func configureCurrentTrackerPublisher() {
         playerItemQueuePublisher
             .slice(at: \.currentPlayerItem)
+            .filter { $0 != .invalid }
+            .map { playerItem in
+                switch playerItem {
+                case let .valid(item):
+                    return item
+                case .invalid:
+                    return nil
+                }
+            }
             .map { [weak self] item in
                 guard let self, let item else { return nil }
                 return CurrentTracker(item: item, player: self)
@@ -345,9 +363,14 @@ private extension Player {
             nowPlayingSession.remoteCommandCenter.skipBackwardCommand.isEnabled = areSkipsEnabled
             nowPlayingSession.remoteCommandCenter.skipForwardCommand.isEnabled = areSkipsEnabled
 
-            let index = update.currentIndex
-            nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
-            nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
+            switch update.currentIndex {
+            case let .valid(index):
+                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = canReturn(before: index, in: update.items, streamType: properties.streamType)
+                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = canAdvance(after: index, in: update.items)
+            default:
+                nowPlayingSession.remoteCommandCenter.previousTrackCommand.isEnabled = false
+                nowPlayingSession.remoteCommandCenter.nextTrackCommand.isEnabled = false
+            }
         }
         .store(in: &cancellables)
     }
