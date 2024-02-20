@@ -43,7 +43,7 @@ extension Player {
             .compactMap { asset -> NowPlayingInfo? in
                 guard let asset else { return NowPlayingInfo() }
                 guard !asset.resource.isLoading else { return nil }
-                return asset.nowPlayingInfo()
+                return asset.nowPlayingInfo() ?? [:]
             }
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type
