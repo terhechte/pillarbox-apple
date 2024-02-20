@@ -35,6 +35,15 @@ enum Resource {
         }
     }
 
+    var error: NSError? {
+        switch self {
+        case let .custom(_, delegate):
+            return (delegate as? FailedResourceLoaderDelegate)?.error as? NSError
+        default:
+            return nil
+        }
+    }
+
     func playerItem() -> AVPlayerItem {
         switch self {
         case let .simple(url: url):
