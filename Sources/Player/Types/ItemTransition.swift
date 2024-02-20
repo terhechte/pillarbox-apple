@@ -32,4 +32,15 @@ enum ItemTransition: Equatable {
             return .advance(to: nil)
         }
     }
+
+    var item: AVPlayerItem? {
+        switch self {
+        case let .advance(to: item):
+            return item
+        case let .stop(on: item):
+            return item
+        case .finish:
+            return nil
+        }
+    }
 }

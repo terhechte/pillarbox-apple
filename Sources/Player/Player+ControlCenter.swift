@@ -31,19 +31,18 @@ extension Player {
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
         queuePublisher()
-            .map(\.currentAsset)
-            .map { update -> (any Assetable)? in
-                switch update {
+            .compactMap { queue -> ((any Assetable)?, Error?)? in
+                switch queue.currentAsset {
                 case let .valid(asset):
-                    return asset
+                    return (asset, queue.itemTransition.item?.error)
                 case .invalid:
                     return nil
                 }
             }
-            .compactMap { asset -> NowPlayingInfo? in
+            .compactMap { asset, error -> NowPlayingInfo? in
                 guard let asset else { return NowPlayingInfo() }
                 guard !asset.resource.isLoading else { return nil }
-                return asset.nowPlayingInfo()
+                return asset.nowPlayingInfo(with: error)
             }
             .removeDuplicates { lhs, rhs in
                 // swiftlint:disable:next legacy_objc_type
