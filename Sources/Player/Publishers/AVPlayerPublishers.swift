@@ -17,6 +17,15 @@ extension AVPlayer {
 
     func itemTransitionPublisher() -> AnyPublisher<ItemTransition, Never> {
         currentItemPublisher()
+            .map { item -> AnyPublisher<AVPlayerItem?, Never> in
+                guard let item else { return Just(nil).eraseToAnyPublisher() }
+                return item
+                    .errorPublisher()
+                    .map { _ in item }
+                    .prepend(item)
+                    .eraseToAnyPublisher()
+            }
+            .switchToLatest()
             .withPrevious(nil)
             .map { ItemTransition.transition(from: $0.previous, to: $0.current) }
             .removeDuplicates()
@@ -44,12 +53,5 @@ extension AVPlayer {
         .map { .init(rate: $0, isExternalPlaybackActive: $1, isMuted: $2) }
         .removeDuplicates()
         .eraseToAnyPublisher()
-    }
-
-    func errorPublisher() -> AnyPublisher<Error?, Never> {
-        currentItemPublisher()
-            .compactMap { $0?.errorPublisher() }
-            .switchToLatest()
-            .eraseToAnyPublisher()
     }
 }
