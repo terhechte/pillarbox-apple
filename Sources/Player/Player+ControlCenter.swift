@@ -9,24 +9,28 @@ import MediaPlayer
 
 extension Player {
     func updateControlCenter(nowPlayingInfo: NowPlayingInfo) {
-        if !nowPlayingInfo.isEmpty {
-            if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
-                uninstallRemoteCommands()
-                installRemoteCommands()
+        if isControlCenterControlsEnabled {
+            if !nowPlayingInfo.isEmpty {
+                if nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo == nil {
+                    uninstallRemoteCommands()
+                    installRemoteCommands()
+                }
+                nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
             }
-            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
-        }
-        else {
-            uninstallRemoteCommands()
-            nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
+            else {
+                uninstallRemoteCommands()
+                nowPlayingSession.nowPlayingInfoCenter.nowPlayingInfo = nil
+            }
         }
     }
 
     func uninstallRemoteCommands() {
-        commandRegistrations.forEach { registration in
-            nowPlayingSession.remoteCommandCenter.unregister(registration)
+        if isControlCenterControlsEnabled {
+            commandRegistrations.forEach { registration in
+                nowPlayingSession.remoteCommandCenter.unregister(registration)
+            }
+            commandRegistrations = []
         }
-        commandRegistrations = []
     }
 
     func nowPlayingInfoMetadataPublisher() -> AnyPublisher<NowPlayingInfo, Never> {
@@ -82,16 +86,18 @@ extension Player {
 
 private extension Player {
     func installRemoteCommands() {
-        commandRegistrations = [
-            playRegistration(),
-            pauseRegistration(),
-            togglePlayPauseRegistration(),
-            previousTrackRegistration(),
-            nextTrackRegistration(),
-            changePlaybackPositionRegistration(),
-            skipBackwardRegistration(),
-            skipForwardRegistration()
-        ]
+        if isControlCenterControlsEnabled {
+            commandRegistrations = [
+                playRegistration(),
+                pauseRegistration(),
+                togglePlayPauseRegistration(),
+                previousTrackRegistration(),
+                nextTrackRegistration(),
+                changePlaybackPositionRegistration(),
+                skipBackwardRegistration(),
+                skipForwardRegistration()
+            ]
+        }
     }
 
     func playRegistration() -> some RemoteCommandRegistrable {

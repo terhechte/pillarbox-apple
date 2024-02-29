@@ -18,6 +18,9 @@ public final class Player: ObservableObject, Equatable {
 
     /// The player version.
     public static let version = PackageInfo.version
+    
+    /// Should control center controls be handled
+    @Published public var isControlCenterControlsEnabled = true
 
     /// The last error received by the player.
     @Published public private(set) var error: Error?
