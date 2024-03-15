@@ -10,7 +10,7 @@ import CombineExt
 import DequeModule
 import MediaPlayer
 import PillarboxCore
-import TimelaneCombine
+//import TimelaneCombine
 
 /// An observable audio / video player maintaining its items as a double-ended queue.
 public final class Player: ObservableObject, Equatable {
@@ -38,10 +38,14 @@ public final class Player: ObservableObject, Equatable {
         didSet {
             if isActive {
                 nowPlayingSession.becomeActiveIfPossible()
+                #if os(iOS)
                 queuePlayer.allowsExternalPlayback = configuration.allowsExternalPlayback
+                #endif
             }
             else {
+#if os(iOS)
                 queuePlayer.allowsExternalPlayback = false
+                #endif
             }
         }
     }
@@ -212,9 +216,11 @@ public final class Player: ObservableObject, Equatable {
     }
 
     private func configurePlayer() {
+#if os(iOS)
         queuePlayer.allowsExternalPlayback = false
         queuePlayer.usesExternalPlaybackWhileExternalScreenIsActive = configuration.usesExternalPlaybackWhileMirroring
         queuePlayer.preventsDisplaySleepDuringVideoPlayback = configuration.preventsDisplaySleepDuringVideoPlayback
+        #endif
     }
 
     private func configureControlCenterPublishers() {
@@ -298,7 +304,6 @@ private extension Player {
         queuePublisher
             .slice(at: \.index)
             .receiveOnMainThread()
-            .lane("player_current_index")
             .assign(to: &$currentIndex)
     }
 
