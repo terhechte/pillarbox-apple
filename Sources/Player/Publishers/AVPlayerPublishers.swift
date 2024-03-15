@@ -60,6 +60,7 @@ extension AVPlayer {
             .eraseToAnyPublisher()
     }
 
+    #if os(iOS)
     func playbackPropertiesPublisher() -> AnyPublisher<PlaybackProperties, Never> {
         Publishers.CombineLatest3(
             publisher(for: \.rate),
@@ -70,4 +71,15 @@ extension AVPlayer {
         .removeDuplicates()
         .eraseToAnyPublisher()
     }
+    #else
+    func playbackPropertiesPublisher() -> AnyPublisher<PlaybackProperties, Never> {
+        Publishers.CombineLatest(
+            publisher(for: \.rate),
+            publisher(for: \.isMuted)
+        )
+        .map { .init(rate: $0, isExternalPlaybackActive: .init(false), isMuted: $1) }
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+    #endif
 }

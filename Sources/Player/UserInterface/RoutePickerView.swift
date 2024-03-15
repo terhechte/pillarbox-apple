@@ -10,6 +10,7 @@ import SwiftUI
 /// A button to pick a playback route.
 ///
 /// Behavior: h-exp, v-exp
+#if os(iOS)
 public struct RoutePickerView: UIViewRepresentable {
     private var prioritizesVideoDevices: Bool
     private var activeTintColor: Color?
@@ -53,3 +54,4 @@ public extension RoutePickerView {
 #Preview("Video") {
     RoutePickerView(prioritizesVideoDevices: true)
 }
+#endif

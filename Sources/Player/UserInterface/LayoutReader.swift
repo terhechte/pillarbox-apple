@@ -58,7 +58,11 @@ private final class LayoutReaderViewController: UIViewController, UIGestureRecog
         let frame = view.frame
 
         let parentFrame = Self.parent(for: self).view.frame
+        #if os(iOS)
         let screenFrame = view.window?.windowScene?.screen.bounds ?? .zero
+        #else
+        let screenFrame: CGRect = .zero
+        #endif
 
         layoutInfo.wrappedValue = .init(
             isOverCurrentContext: frame == parentFrame,
